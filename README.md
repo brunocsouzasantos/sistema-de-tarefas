@@ -75,7 +75,7 @@ A Seeder irar criar um usuário administrativo com as seguintes informações de
 
 OBS: Nesse ponto, caso você tenha pulado a configuração de SMTP o comando acima irar gerar um erro. Siga todos os passos.
 
-Para iniciar o projeto na máquina, via terminal, entre na pasta raiz do projeto (sistema-de-tarefas) e digite o comando:
+Para iniciar o projeto, via terminal, entre na pasta raiz (sistema-de-tarefas) e digite o comando:
 
 > $ quasar d
 
