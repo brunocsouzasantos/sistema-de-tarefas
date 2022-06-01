@@ -75,5 +75,8 @@ A Seeder irar criar um usuário administrativo com as seguintes informações de
 
 OBS: Nesse ponto, caso você tenha pulado a configuração de SMTP o comando acima irar gerar um erro. Siga todos os passos.
 
-Pronto o projeto estará rodando em sua máquina!
+Para iniciar o projeto na máquina, via terminal, entre na pasta raiz do projeto (sistema-de-tarefas) e digite o comando:
 
+> $ quadar d
+
+Os sistema irá abrir em seu browser na url http://localhost:8080
