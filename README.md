@@ -77,6 +77,6 @@ OBS: Nesse ponto, caso você tenha pulado a configuração de SMTP o comando aci
 
 Para iniciar o projeto na máquina, via terminal, entre na pasta raiz do projeto (sistema-de-tarefas) e digite o comando:
 
-> $ quadar d
+> $ quasar d
 
 Os sistema irá abrir em seu browser na url http://localhost:8080
