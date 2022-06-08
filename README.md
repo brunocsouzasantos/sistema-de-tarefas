@@ -79,4 +79,4 @@ Para iniciar o projeto, via terminal, entre na pasta raiz (sistema-de-tarefas) e
 
 > $ quasar d
 
-Os sistema irá abrir em seu browser na url http://localhost:8080
+O sistema irá abrir em seu browser na url http://localhost:8080
