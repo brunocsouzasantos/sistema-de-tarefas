@@ -11,13 +11,13 @@
       <q-tr :props="props">
         <q-td key="name" :props="props">{{ props.row.name }}</q-td>
         <q-td key="email" :props="props">{{ props.row.email }}</q-td>
-        <q-td key="created_at" :props="props">{{ props.row.created_at | formataData }}</q-td>
-        <q-td key="updated_at" :props="props">{{ props.row.updated_at | formataData}}</q-td>
+        <q-td key="created_at" :props="props">{{ props.row.created_at | formatarData }}</q-td>
+        <q-td key="updated_at" :props="props">{{ props.row.updated_at | formatarData}}</q-td>
         <q-td key="acoes">
           <q-btn round color="secondary" icon="edit" size="10px" class="q-mr-sm"
             @click="editarUsuario(props.row)" />
           <q-btn :disable="props.row.permissao === 'ADM'" round color="red" icon="delete" size="10px"
-          @click="validaExclusao(props.row)" />
+          @click="validarExclusao(props.row)" />
         </q-td>
       </q-tr>
     </template>
@@ -44,7 +44,7 @@ export default {
   props: ['rotaEditar'],
   methods: {
     ...mapActions('gerenciarUsuario', ['listarUsuarios', 'deletarUsuario']),
-    populaDatatable () {
+    popularDatatable () {
       const getUsuarios = async () => {
         try {
           const response = await this.listarUsuarios()
@@ -59,7 +59,7 @@ export default {
     editarUsuario (usuario) {
       this.$router.push({ name: 'gus_editar', params: { formUsuario: usuario } })
     },
-    validaExclusao (row) {
+    validarExclusao (row) {
       this.$q.dialog({
         title: 'Confirmação',
         message: 'Deseja deletar o registro?',
@@ -71,7 +71,7 @@ export default {
             const { message } = await this.deletarUsuario(row.id)
             this.$util.mensagemSucesso(message)
             const linha = this.usuarios.indexOf(row)
-            this.usuarios.splice(linha, 1)
+            this.$delete(this.usuarios, linha)
           } catch ({ message }) {
             this.$util.mensagemErro(message)
           }
@@ -81,12 +81,12 @@ export default {
     }
   },
   filters: {
-    formataData (data) {
+    formatarData (data) {
       return moment(data).utc().format('DD/MM/YYYY HH:mm')
     }
   },
   mounted () {
-    this.populaDatatable()
+    this.popularDatatable()
   }
 }
 </script>

@@ -12,7 +12,7 @@
         </div>
         <div class="col-12 col-md-6 q-mt-md q-px-xs" v-if="!tipoEditar">
           <q-input v-model="form.password" outlined :type="isPwd ? 'password' : 'text'"
-            label="Informe sua senha" lazy-rules :rules="[validaCaracteristicasSenha]">
+            label="Informe sua senha" lazy-rules :rules="[validarCaracteristicasSenha]">
             <template v-slot:prepend>
               <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer" @click="isPwd = !isPwd" />
             </template>
@@ -64,7 +64,7 @@ export default {
         update()
         return
       }
-      if (this.validaSenhaIguais()) {
+      if (this.validarSenhaIguais()) {
         this.$util.mensagemWarning('As senhas precisam ser iguais')
         return
       }
@@ -79,7 +79,7 @@ export default {
       }
       store()
     },
-    validaCaracteristicasSenha (senha) {
+    validarCaracteristicasSenha (senha) {
       if (senha === null) {
         return 'Informe uma senha'
       }
@@ -93,7 +93,7 @@ export default {
         return 'Sua senha deve possuir no mínimo um número'
       }
     },
-    validaSenhaIguais () {
+    validarSenhaIguais () {
       if (this.form.password !== this.form.password_confirm) {
         return true
       }

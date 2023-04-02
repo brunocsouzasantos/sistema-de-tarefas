@@ -3,8 +3,8 @@
     :columns="columns" separator="none" hide-header row-key="id">
     <template v-slot:top="props">
       <div class="q-table__title">
-        <q-radio v-model="tipoFiltroTarefas" val="PE" label="Tarefas pendentes" @input="populaDatatable()"/>
-        <q-radio v-model="tipoFiltroTarefas" val="CO" label="Tarefas concluídas" @input="populaDatatable()"/>
+        <q-radio v-model="tipoFiltroTarefas" val="PE" label="Tarefas pendentes" @input="popularDatatable()"/>
+        <q-radio v-model="tipoFiltroTarefas" val="CO" label="Tarefas concluídas" @input="popularDatatable()"/>
       </div>
       <q-space />
       <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
@@ -22,28 +22,38 @@
                   <q-item-label class="q-mt-sm">{{props.row.nome}}</q-item-label>
                 </q-item-section>
                 <q-item-section top>
-                  <q-item-label lines="1">
+                  <q-item-label class="q-mt-sm" lines="1">
                     <span class="text-weight-medium">Assunto: </span>
                     <span class="text-grey-8">{{props.row.titulo}}</span>
                   </q-item-label>
-                  <q-item-label caption lines="1" v-html="props.row.descricao" />
+                  <q-item-label caption lines="1" v-if="false">
+                    <span v-html="props.row.descricao" />
+                  </q-item-label>
                 </q-item-section>
                 <q-item-section top side>
                   <div class="text-grey-8 q-gutter-xm">
-                    Data de criação: {{props.row.created_at | formataData}} <br />
-                    Última alteração: {{props.row.updated_at | formataData}}
+                    Data de criação: {{props.row.created_at | formatarData}} <br />
+                    Última alteração: {{props.row.updated_at | formatarData}}
                   </div>
                 </q-item-section>
-                <q-item-section top side>
+                <q-item-section side>
                   <div class="text-grey-8 q-gutter-xs">
                     <q-btn v-if="props.row.status === 'PE'" class="gt-xs" size="12px" flat dense round icon="edit"
-                      @click="editarTarefa(props.row)" />
-                    <q-btn v-if="props.row.status === 'PE'" class="gt-xs" size="12px" flat dense round icon="done" color="orange"
-                      @click="validaConclusaoTarefa(props.row, 'Confirma a conclusão da tarefa?')" />
+                      @click="editarTarefa(props.row)">
+                      <q-tooltip>Editar tarefa</q-tooltip>
+                    </q-btn>
+                    <q-btn v-if="props.row.status === 'PE'" class="gt-xs" size="12px" flat dense round icon="done"
+                      @click="validarConclusaoTarefa(props.row, 'Confirma a conclusão da tarefa?')">
+                      <q-tooltip>Concluir tarefa</q-tooltip>
+                    </q-btn>
                     <q-btn v-if="props.row.status === 'CO'" class="gt-xs" size="12px" flat dense round icon="remove_done" color="red"
-                      @click="validaConclusaoTarefa(props.row, 'Passar tarefa novamente para pendente?')" />
+                      @click="validarConclusaoTarefa(props.row, 'Passar tarefa novamente para pendente?')">
+                      <q-tooltip>Passar tarefa para pendente</q-tooltip>
+                    </q-btn>
                     <q-btn v-if="props.row.status === 'PE'" class="gt-xs" size="12px" flat dense round icon="delete"
-                      @click="validaExclusao(props.row)" />
+                      @click="validarExclusao(props.row)">
+                      <q-tooltip>Excluir tarefa</q-tooltip>
+                    </q-btn>
                   </div>
                 </q-item-section>
               </q-item>
@@ -69,7 +79,7 @@ export default {
   props: ['rotaEditar'],
   methods: {
     ...mapActions('gerenciarTarefa', ['listarTarefas', 'deletarTarefa', 'atualizarStatusTarefa']),
-    populaDatatable () {
+    popularDatatable () {
       this.tarefas = []
       const getTarefas = async () => {
         try {
@@ -85,7 +95,7 @@ export default {
     editarTarefa (Tarefa) {
       this.$router.push({ name: 'taf_editar', params: { formTarefa: Tarefa } })
     },
-    validaExclusao (row) {
+    validarExclusao (row) {
       this.$q.dialog({
         title: 'Confirmação',
         message: 'Deseja deletar o registro?',
@@ -105,7 +115,7 @@ export default {
         destroy()
       })
     },
-    validaConclusaoTarefa (row, texto) {
+    validarConclusaoTarefa (row, texto) {
       this.$q.dialog({
         title: 'Confirmação',
         message: texto,
@@ -118,7 +128,7 @@ export default {
             this.$util.mensagemSucesso(message)
             if (type !== this.tipoFiltroTarefas) {
               const linha = this.tarefas.indexOf(row)
-              this.tarefas.splice(linha, 1)
+              this.$delete(this.tarefas, linha)
             }
           } catch ({ message }) {
             this.$util.mensagemErro(message)
@@ -129,12 +139,12 @@ export default {
     }
   },
   filters: {
-    formataData (data) {
+    formatarData (data) {
       return moment(data).utc().format('DD/MM/YYYY HH:mm')
     }
   },
   mounted () {
-    this.populaDatatable()
+    this.popularDatatable()
   }
 }
 </script>
