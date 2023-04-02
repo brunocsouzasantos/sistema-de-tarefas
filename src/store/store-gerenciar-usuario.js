@@ -15,7 +15,7 @@ const mutations = {
 }
 
 const actions = {
-  login (context, form) {
+  login ({ commit }, form) {
     const acl = this.$acl
     return new Promise((resolve, reject) => {
       axios({
@@ -23,10 +23,10 @@ const actions = {
         data: form,
         url: `${process.env.API}/login`
       })
-        .then((response) => {
-          resolve(response.data)
-          context.commit('SET_USUARIO', response.data)
-          context.commit('SET_TOKEN', response.data.token)
+        .then(({ data }) => {
+          resolve(data)
+          commit('SET_USUARIO', data)
+          commit('SET_TOKEN', data.token)
           acl.redireciona()
         })
         .catch(({ response: { data } }) => {
@@ -34,79 +34,9 @@ const actions = {
         })
     })
   },
-  listarUsuarios (context) {
-    return new Promise((resolve, reject) => {
-      const token = context.rootState.gerenciarUsuario.token
-      axios.get(`${process.env.API}/listar_usuarios`, { headers: { Authorization: 'Bearer ' + token } })
-        .then(({ data }) => {
-          resolve(data)
-        })
-        .catch(({ response: { data } }) => {
-          reject(data)
-        })
-    })
-  },
-  cadastrarUsuario (context, formUsuario) {
-    this.$util.showLoading()
-    return new Promise((resolve, reject) => {
-      const token = context.rootState.gerenciarUsuario.token
-      axios({
-        method: 'post',
-        data: formUsuario,
-        url: `${process.env.API}/cadastrar_usuario`,
-        headers: { Authorization: `Bearer ${token}` }
-      })
-        .then(({ data }) => {
-          resolve(data)
-        })
-        .catch(({ response: { data } }) => {
-          reject(data)
-        })
-        .finally(() => {
-          this.$util.hideLoading()
-        })
-    })
-  },
-  atualizarUsuario (context, formUsuario) {
-    this.$util.showLoading()
-    return new Promise((resolve, reject) => {
-      const token = context.rootState.gerenciarUsuario.token
-      axios({
-        method: 'put',
-        data: formUsuario,
-        url: `${process.env.API}/atualizar_usuario`,
-        headers: { Authorization: `Bearer ${token}` }
-      })
-        .then(({ data }) => {
-          resolve(data)
-        })
-        .catch(({ response: { data } }) => {
-          reject(data)
-        })
-        .finally(() => {
-          this.$util.hideLoading()
-        })
-    })
-  },
-  deletarUsuario (context, id) {
-    this.$util.showLoading()
-    return new Promise((resolve, reject) => {
-      const token = context.rootState.gerenciarUsuario.token
-      axios.delete(`${process.env.API}/deletar_usuario/${id}`, { headers: { Authorization: 'Bearer ' + token } })
-        .then(({ data }) => {
-          resolve(data)
-        })
-        .catch(({ response: { data } }) => {
-          reject(data)
-        })
-        .finally(() => {
-          this.$util.hideLoading()
-        })
-    })
-  },
-  logout (context) {
-    context.commit('SET_TOKEN', null)
-    context.commit('SET_USUARIO', null)
+  logout ({ commit }) {
+    commit('SET_TOKEN', null)
+    commit('SET_USUARIO', null)
     this.$router.push({ name: 'login' })
   }
 }

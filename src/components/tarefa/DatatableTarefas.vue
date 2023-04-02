@@ -78,12 +78,12 @@ export default {
   },
   props: ['rotaEditar'],
   methods: {
-    ...mapActions('gerenciarTarefa', ['listarTarefas', 'deletarTarefa', 'atualizarStatusTarefa']),
+    ...mapActions('util', ['callApi']),
     popularDatatable () {
       this.tarefas = []
       const getTarefas = async () => {
         try {
-          const response = await this.listarTarefas(this.tipoFiltroTarefas)
+          const response = await this.callApi({ endPoint: `listar_tarefas/${this.tipoFiltroTarefas}` })
           this.tarefas = await response
           this.loadingDados = false
         } catch ({ message }) {
@@ -102,12 +102,13 @@ export default {
         cancel: true,
         persistent: true
       }).onOk(() => {
+        console.log(row)
         const destroy = async () => {
           try {
-            const { message } = await this.deletarTarefa(row.id)
+            const { message } = await this.callApi({ endPoint: `deletar_tarefa/${row.id}`, method: 'delete' })
             this.$util.mensagemSucesso(message)
             const linha = this.tarefas.indexOf(row)
-            this.tarefas.splice(linha, 1)
+            this.$delete(this.tarefas, linha)
           } catch ({ message }) {
             this.$util.mensagemErro(message)
           }
@@ -124,7 +125,7 @@ export default {
       }).onOk(() => {
         const updateStatus = async () => {
           try {
-            const { message, type } = await this.atualizarStatusTarefa(row)
+            const { message, type } = await this.callApi({ endPoint: 'atualizar_status_tarefa', method: 'put', data: row })
             this.$util.mensagemSucesso(message)
             if (type !== this.tipoFiltroTarefas) {
               const linha = this.tarefas.indexOf(row)

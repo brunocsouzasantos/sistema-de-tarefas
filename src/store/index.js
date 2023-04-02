@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 // import example from './module-example'
 import gerenciarUsuario from './store-gerenciar-usuario'
 import gerenciarTarefa from './store-gerenciar-tarefa'
+import util from './util'
 
 Vue.use(Vuex)
 
@@ -20,7 +21,8 @@ export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
       gerenciarUsuario,
-      gerenciarTarefa
+      gerenciarTarefa,
+      util
     },
 
     // enable strict mode (adds overhead!)

@@ -34,13 +34,13 @@ export default {
   },
   props: ['formTarefa', 'tipoEditar'],
   methods: {
-    ...mapActions('gerenciarTarefa', ['cadastrarTarefa', 'atualizarTarefa']),
+    ...mapActions('util', ['callApi']),
     onSubmit () {
       this.form.descricao = this.descricao
       if (this.form.id !== null && this.form.id !== undefined) {
         const update = async () => {
           try {
-            const { message } = await this.atualizarTarefa(this.form)
+            const { message } = await this.callApi({ endPoint: 'atualizar_tarefa', method: 'put', data: this.form })
             this.$util.mensagemSucesso(message)
             this.$router.push({ name: 'taf_index' })
           } catch ({ message }) {
@@ -52,7 +52,7 @@ export default {
       }
       const store = async () => {
         try {
-          const { message } = await this.cadastrarTarefa(this.form)
+          const { message } = await this.callApi({ endPoint: 'cadastrar_tarefa', method: 'post', data: this.form })
           this.$util.mensagemSucesso(message)
           this.$router.push({ name: 'taf_index' })
         } catch ({ message }) {

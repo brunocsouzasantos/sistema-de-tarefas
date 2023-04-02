@@ -43,11 +43,11 @@ export default {
   },
   props: ['rotaEditar'],
   methods: {
-    ...mapActions('gerenciarUsuario', ['listarUsuarios', 'deletarUsuario']),
+    ...mapActions('util', ['callApi']),
     popularDatatable () {
       const getUsuarios = async () => {
         try {
-          const response = await this.listarUsuarios()
+          const response = await this.callApi({ endPoint: 'listar_usuarios' })
           this.usuarios = await response
           this.loadingDados = false
         } catch ({ message }) {
@@ -68,7 +68,7 @@ export default {
       }).onOk(() => {
         const destroy = async () => {
           try {
-            const { message } = await this.deletarUsuario(row.id)
+            const { message } = await this.callApi({ endPoint: `deletar_usuario/${row.id}`, method: 'delete' })
             this.$util.mensagemSucesso(message)
             const linha = this.usuarios.indexOf(row)
             this.$delete(this.usuarios, linha)

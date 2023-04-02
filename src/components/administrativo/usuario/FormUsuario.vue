@@ -49,12 +49,12 @@ export default {
   },
   props: ['formUsuario', 'tipoEditar'],
   methods: {
-    ...mapActions('gerenciarUsuario', ['cadastrarUsuario', 'atualizarUsuario']),
+    ...mapActions('util', ['callApi']),
     onSubmit () {
       if (this.form.id !== null && this.form.id !== undefined) {
         const update = async () => {
           try {
-            const { message } = await this.atualizarUsuario(this.form)
+            const { message } = await this.callApi({ endPoint: 'atualizar_usuario', method: 'put', data: this.form })
             this.$util.mensagemSucesso(message)
             this.$router.push({ name: 'gus_index' })
           } catch ({ message }) {
@@ -70,7 +70,7 @@ export default {
       }
       const store = async () => {
         try {
-          const { message } = await this.cadastrarUsuario(this.form)
+          const { message } = await this.callApi({ endPoint: 'cadastrar_usuario', method: 'post', data: this.form })
           this.$util.mensagemSucesso(message)
           this.$router.push({ name: 'gus_index' })
         } catch ({ message }) {
