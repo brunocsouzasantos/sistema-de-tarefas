@@ -26,7 +26,7 @@ class UsuarioController extends Controller
 
     public function cadastrarUsuario(Request $request)
     {
-        $dataForm = $request->all();    
+        $dataForm = $request->all();
         $isEmailCadastrado = $this->util->verificaEmailCadastrado($dataForm['email']);
         if ($isEmailCadastrado) {
             return $this->util->jsonMessage('error', 'E-mail já cadastrado para outro usuário.', 409);

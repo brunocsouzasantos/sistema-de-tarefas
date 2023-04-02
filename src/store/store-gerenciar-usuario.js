@@ -29,8 +29,8 @@ const actions = {
           context.commit('SET_TOKEN', response.data.token)
           acl.redireciona()
         })
-        .catch((error) => {
-          reject(error.response.data)
+        .catch(({ response: { data } }) => {
+          reject(data)
         })
     })
   },
@@ -38,11 +38,11 @@ const actions = {
     return new Promise((resolve, reject) => {
       const token = context.rootState.gerenciarUsuario.token
       axios.get(`${process.env.API}/listar_usuarios`, { headers: { Authorization: 'Bearer ' + token } })
-        .then((response) => {
-          resolve(response.data)
+        .then(({ data }) => {
+          resolve(data)
         })
-        .catch((error) => {
-          reject(error.response.data)
+        .catch(({ response: { data } }) => {
+          reject(data)
         })
     })
   },
@@ -56,11 +56,11 @@ const actions = {
         url: `${process.env.API}/cadastrar_usuario`,
         headers: { Authorization: `Bearer ${token}` }
       })
-        .then((response) => {
-          resolve(response.data)
+        .then(({ data }) => {
+          resolve(data)
         })
-        .catch((error) => {
-          reject(error.response.data)
+        .catch(({ response: { data } }) => {
+          reject(data)
         })
         .finally(() => {
           this.$util.hideLoading()
@@ -77,11 +77,11 @@ const actions = {
         url: `${process.env.API}/atualizar_usuario`,
         headers: { Authorization: `Bearer ${token}` }
       })
-        .then((response) => {
-          resolve(response.data)
+        .then(({ data }) => {
+          resolve(data)
         })
-        .catch((error) => {
-          reject(error.response.data)
+        .catch(({ response: { data } }) => {
+          reject(data)
         })
         .finally(() => {
           this.$util.hideLoading()
@@ -93,11 +93,11 @@ const actions = {
     return new Promise((resolve, reject) => {
       const token = context.rootState.gerenciarUsuario.token
       axios.delete(`${process.env.API}/deletar_usuario/${id}`, { headers: { Authorization: 'Bearer ' + token } })
-        .then((response) => {
-          resolve(response.data)
+        .then(({ data }) => {
+          resolve(data)
         })
-        .catch((error) => {
-          reject(error.response.data)
+        .catch(({ response: { data } }) => {
+          reject(data)
         })
         .finally(() => {
           this.$util.hideLoading()

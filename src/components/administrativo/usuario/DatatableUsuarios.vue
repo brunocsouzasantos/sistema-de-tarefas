@@ -50,8 +50,8 @@ export default {
           const response = await this.listarUsuarios()
           this.usuarios = await response
           this.loadingDados = false
-        } catch ({ response: { data } }) {
-          this.$util.mensagemErro(data.message)
+        } catch ({ message }) {
+          this.$util.mensagemErro(message)
         }
       }
       getUsuarios()

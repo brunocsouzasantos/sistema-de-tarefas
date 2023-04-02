@@ -5,11 +5,11 @@ const actions = {
     return new Promise((resolve, reject) => {
       const token = context.rootState.gerenciarUsuario.token
       axios.get(`${process.env.API}/listar_tarefas/${tipoFiltroTarefas}`, { headers: { Authorization: 'Bearer ' + token } })
-        .then((response) => {
-          resolve(response.data)
+        .then(({ data }) => {
+          resolve(data)
         })
-        .catch((error) => {
-          reject(error.response.data)
+        .catch(({ response: { data } }) => {
+          reject(data)
         })
     })
   },
@@ -23,11 +23,11 @@ const actions = {
         url: `${process.env.API}/cadastrar_tarefa`,
         headers: { Authorization: `Bearer ${token}` }
       })
-        .then((response) => {
-          resolve(response.data)
+        .then(({ data }) => {
+          resolve(data)
         })
-        .catch((error) => {
-          reject(error.response.data)
+        .catch(({ response: { data } }) => {
+          reject(data)
         })
         .finally(() => {
           this.$util.hideLoading()
@@ -44,11 +44,11 @@ const actions = {
         url: `${process.env.API}/atualizar_tarefa`,
         headers: { Authorization: `Bearer ${token}` }
       })
-        .then((response) => {
-          resolve(response.data)
+        .then(({ data }) => {
+          resolve(data)
         })
-        .catch((error) => {
-          reject(error.response.data)
+        .catch(({ response: { data } }) => {
+          reject(data)
         })
         .finally(() => {
           this.$util.hideLoading()
@@ -60,11 +60,11 @@ const actions = {
     return new Promise((resolve, reject) => {
       const token = context.rootState.gerenciarUsuario.token
       axios.delete(`${process.env.API}/deletar_tarefa/${id}`, { headers: { Authorization: 'Bearer ' + token } })
-        .then((response) => {
-          resolve(response.data)
+        .then(({ data }) => {
+          resolve(data)
         })
-        .catch((error) => {
-          reject(error.response.data)
+        .catch(({ response: { data } }) => {
+          reject(data)
         })
         .finally(() => {
           this.$util.hideLoading()
@@ -81,11 +81,11 @@ const actions = {
         url: `${process.env.API}/atualizar_status_tarefa`,
         headers: { Authorization: `Bearer ${token}` }
       })
-        .then((response) => {
-          resolve(response.data)
+        .then(({ data }) => {
+          resolve(data)
         })
-        .catch((error) => {
-          reject(error.response.data)
+        .catch(({ response: { data } }) => {
+          reject(data)
         })
         .finally(() => {
           this.$util.hideLoading()

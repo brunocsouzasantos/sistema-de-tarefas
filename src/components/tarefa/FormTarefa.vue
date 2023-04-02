@@ -53,7 +53,6 @@ export default {
       const store = async () => {
         try {
           const { message } = await this.cadastrarTarefa(this.form)
-          console.log(message)
           this.$util.mensagemSucesso(message)
           this.$router.push({ name: 'taf_index' })
         } catch ({ message }) {
