@@ -9,7 +9,7 @@ use App\Http\Controllers\Util;
 
 class TarefaController extends Controller
 {
-    
+
     protected $util;
 
     public function __construct(Util $util)
@@ -21,6 +21,10 @@ class TarefaController extends Controller
     {
         $usuario = JWTAuth::parseToken()->authenticate();
         try {
+            if ($tipoFiltroTarefas === "TO") {
+                return Tarefa::where('user_id', $usuario->id)
+                            ->get();
+            }
             if($usuario->permissao === 'USR') {
                 return Tarefa::where('status', $tipoFiltroTarefas)
                             ->where('user_id', $usuario->id)
@@ -37,7 +41,7 @@ class TarefaController extends Controller
 
     public function cadastrarTarefa(Request $request)
     {
-        $dataForm = $request->all();    
+        $dataForm = $request->all();
         $usuario = JWTAuth::parseToken()->authenticate();
         try {
             Tarefa::create([
@@ -87,7 +91,7 @@ class TarefaController extends Controller
             $this->util->logDebug($tarefa);
             $tarefa->update();
             return response()->json([
-                'success' => true, 
+                'success' => true,
                 'message' => 'Status da tarefa atualizado com sucesso.',
                 'type' => $tarefa->status
             ], 200);

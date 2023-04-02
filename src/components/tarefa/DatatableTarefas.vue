@@ -2,9 +2,10 @@
   <q-table title="Lista de tarefas" :loading="loadingDados" :data="tarefas"
     :columns="columns" separator="none" hide-header row-key="id">
     <template v-slot:top="props">
-      <div class="q-table__title">
-        <q-radio v-model="tipoFiltroTarefas" val="PE" label="Tarefas pendentes" @input="popularDatatable()"/>
-        <q-radio v-model="tipoFiltroTarefas" val="CO" label="Tarefas concluídas" @input="popularDatatable()"/>
+      <div>
+        <q-radio v-model="tipoFiltroTarefas" val="TO" label="Todas" @input="popularDatatable()"/>
+        <q-radio v-model="tipoFiltroTarefas" val="PE" label="Pendentes" @input="popularDatatable()"/>
+        <q-radio v-model="tipoFiltroTarefas" val="CO" label="Concluídas" @input="popularDatatable()"/>
       </div>
       <q-space />
       <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
@@ -71,7 +72,7 @@ export default {
   data () {
     return {
       loadingDados: true,
-      tipoFiltroTarefas: 'PE',
+      tipoFiltroTarefas: 'TO',
       tarefas: [],
       columns: [{ name: 'tarefa', align: 'left', field: 'tarefa' }]
     }
@@ -102,7 +103,6 @@ export default {
         cancel: true,
         persistent: true
       }).onOk(() => {
-        console.log(row)
         const destroy = async () => {
           try {
             const { message } = await this.callApi({ endPoint: `deletar_tarefa/${row.id}`, method: 'delete' })
@@ -127,9 +127,11 @@ export default {
           try {
             const { message, type } = await this.callApi({ endPoint: 'atualizar_status_tarefa', method: 'put', data: row })
             this.$util.mensagemSucesso(message)
-            if (type !== this.tipoFiltroTarefas) {
+            if (type !== this.tipoFiltroTarefas && this.tipoFiltroTarefas !== 'TO') {
               const linha = this.tarefas.indexOf(row)
               this.$delete(this.tarefas, linha)
+            } else {
+              this.popularDatatable()
             }
           } catch ({ message }) {
             this.$util.mensagemErro(message)
