@@ -6,6 +6,7 @@ use JWTAuth;
 use App\Models\Tarefa;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Util;
+use App\Http\Requests\CreateUpdateTarefaRequest;
 
 class TarefaController extends Controller
 {
@@ -39,16 +40,16 @@ class TarefaController extends Controller
         }
     }
 
-    public function cadastrarTarefa(Request $request)
+    public function cadastrarTarefa(CreateUpdateTarefaRequest $request)
     {
-        $dataForm = $request->all();
         $usuario = JWTAuth::parseToken()->authenticate();
         try {
             Tarefa::create([
+                $request->validated(),
                 'user_id' => $usuario->id,
-                'nome' => $dataForm['nome'],
-                'titulo' => $dataForm['titulo'],
-                'descricao' => $dataForm['descricao'],
+                'nome' => $request->nome,
+                'titulo' => $request->titulo,
+                'descricao' => $request->descricao,
                 'status' => 'PE',
             ]);
             return $this->util->jsonMessage('success','Tarefa cadastrada com sucesso.', 201);
@@ -57,12 +58,11 @@ class TarefaController extends Controller
         }
     }
 
-    public function atualizarTarefa(Request $request)
+    public function atualizarTarefa(CreateUpdateTarefaRequest $request)
     {
-        $dataForm = $request->all();
-        $tarefa = Tarefa::findOrFail($dataForm['id']);
+        $tarefa = Tarefa::findOrFail($request->id);
         try {
-           $tarefa->update($dataForm);
+           $tarefa->update($request->validated());
            return $this->util->jsonMessage('success', 'Tarefa atualizada com sucesso.', 200);
         } catch (\Exception $e) {
             return $this->util->jsonMessage('error', 'Erro ao atualizar tarefa.', 500);

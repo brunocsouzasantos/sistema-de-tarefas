@@ -43,8 +43,13 @@ export default {
             const { message } = await this.callApi({ endPoint: 'atualizar_tarefa', method: 'put', data: this.form })
             this.$util.mensagemSucesso(message)
             this.$router.push({ name: 'taf_index' })
-          } catch ({ message }) {
-            this.$util.mensagemErro(message)
+          } catch ({ message, errors }) {
+            if (errors) {
+              const msgRequestValidation = Object.values(errors).flat()
+              this.$util.mensagemWarning(msgRequestValidation)
+            } else {
+              this.$util.mensagemErro(message)
+            }
           }
         }
         update()
@@ -55,8 +60,13 @@ export default {
           const { message } = await this.callApi({ endPoint: 'cadastrar_tarefa', method: 'post', data: this.form })
           this.$util.mensagemSucesso(message)
           this.$router.push({ name: 'taf_index' })
-        } catch ({ message }) {
-          this.$util.mensagemErro(message)
+        } catch ({ message, errors }) {
+          if (errors) {
+            const msgRequestValidation = Object.values(errors).flat()
+            this.$util.mensagemWarning(msgRequestValidation)
+          } else {
+            this.$util.mensagemErro(message)
+          }
         }
       }
       store()

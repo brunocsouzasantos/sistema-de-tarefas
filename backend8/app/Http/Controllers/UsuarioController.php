@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Util;
+use App\Http\Requests\CreateUpdateUsuarioRequest;
 
 class UsuarioController extends Controller
 {
@@ -24,18 +25,17 @@ class UsuarioController extends Controller
         }
     }
 
-    public function cadastrarUsuario(Request $request)
+    public function cadastrarUsuario(CreateUpdateUsuarioRequest $request)
     {
-        $dataForm = $request->all();
-        $isEmailCadastrado = $this->util->verificaEmailCadastrado($dataForm['email']);
+        $isEmailCadastrado = $this->util->verificaEmailCadastrado($request->email);
         if ($isEmailCadastrado) {
             return $this->util->jsonMessage('error', 'E-mail já cadastrado para outro usuário.', 409);
         }
         try {
-           User::create([
-                'name' => $dataForm['name'],
-                'email' => $dataForm['email'],
-                'password' => bcrypt($dataForm['password']),
+           User::create([$request->validated(),
+                'name' => $request->name,
+                'email' => $$request->email,
+                'password' => bcrypt($request->password),
                 'permissao' => 'USR'
             ]);
             return $this->util->jsonMessage('success', 'Usuário cadastrado com sucesso.', 201);
@@ -44,7 +44,7 @@ class UsuarioController extends Controller
         }
     }
 
-    public function atualizarUsuario(Request $request)
+    public function atualizarUsuario(CreateUpdateUsuarioRequest $request)
     {
         $dataForm = $request->all();
         $isEmailCadastrado = $this->util->verificaEmailCadastrado($dataForm['email'], $dataForm['id']);
@@ -53,7 +53,7 @@ class UsuarioController extends Controller
         }
         $usuario = User::findOrFail($dataForm['id']);
         try {
-            $usuario->update($dataForm);
+            $usuario->update($request->validated());
             return $this->util->jsonMessage('success', 'Usuário atualizado com sucesso.', 200);
         } catch (\Exception $e) {
             return $this->util->jsonMessage('error', 'Erro ao atualizar usuário.', 500);

@@ -3,8 +3,12 @@ import { Notify, Loading } from 'quasar'
 export default function ({ Vue, app, store, router }) {
   const util = {
     mensagemErro (msg) {
+      if (Array.isArray(msg)) {
+        msg = msg.join('\n')
+      }
       Notify.create({
-        message: msg,
+        message: msg.replace(/\n/g, '<br>'),
+        multiLine: true,
         color: 'negative',
         textColor: 'white',
         position: 'top',
@@ -14,8 +18,11 @@ export default function ({ Vue, app, store, router }) {
       })
     },
     mensagemSucesso (msg) {
+      if (Array.isArray(msg)) {
+        msg = msg.join('\n')
+      }
       Notify.create({
-        message: msg,
+        message: msg.replace(/\n/g, '<br>'),
         color: 'green-4',
         textColor: 'white',
         position: 'top',
@@ -25,8 +32,11 @@ export default function ({ Vue, app, store, router }) {
       })
     },
     mensagemWarning (msg) {
+      if (Array.isArray(msg)) {
+        msg = msg.join('\n')
+      }
       Notify.create({
-        message: msg,
+        message: msg.replace(/\n/g, '<br>'),
         color: 'warning',
         textColor: 'white',
         position: 'top',
